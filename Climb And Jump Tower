@@ -1,0 +1,69 @@
+
+local Window = Euna:CreateWindow({
+   Name = "EUNA HUB",
+   LoadingTitle = "EUNA HUB",
+   LoadingSubtitle = "By: Eunaa",
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = nil, -- Create a custom folder for your hub/game
+      FileName = "ZIRP Hub"
+   },
+   Discord = {
+      Enabled = false,
+      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD
+      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+   },
+   KeySystem = true, -- Set this to true to use our key system
+   KeySettings = {
+      Title = "Untitled",
+      Subtitle = "Key System",
+      Note = "No method of obtaining the key is provided",
+      FileName = "Key", -- It is recommended to use something unique as other scripts using Euna may overwrite your key file
+      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Euna to get the key from
+      Key = {"Hotdog"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+   }
+})
+
+local MainTab = Window:CreateTab("🏡 Home", nil) -- Title, Image
+local Stats = Window:CreateTab("⚡Stats", nil) -- Title, Image
+
+Euna:Notify({
+   Title = "Executed Successfully!",
+   Content = "Press X to Turn ON",
+   Duration = 8.5,
+   Image = nil,
+   Actions = { -- Notification Buttons
+      Ignore = {
+         Name = "Okay",
+         Callback = function()
+         print("The user tapped Okey!")
+      end
+   },
+},
+})
+
+local Button = MainTab:CreateButton({
+   Name = "InfiniteYeld",
+   Callback = function()
+   loadstring(game:HttpGet(('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'),true))()
+   end,
+})
+
+
+local Button = Stats:CreateButton({
+   Name = "World 1",
+   Callback = function()
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-1, 14435, -121)
+wait(3)
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, 14405, -62)
+   end,
+})
+local Button = Stats:CreateButton({
+   Name = "World 2",
+   Callback = function()
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(4995, 14411, -119)
+wait(3)
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, 14405, -62)
+   end,
+})
