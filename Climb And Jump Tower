@@ -1,4 +1,4 @@
-
+local Euna = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 local Window = Euna:CreateWindow({
    Name = "EUNA HUB",
    LoadingTitle = "EUNA HUB",
