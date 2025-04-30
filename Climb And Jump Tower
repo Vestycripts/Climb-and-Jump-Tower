@@ -62,8 +62,11 @@ game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, 14405
 local Button = Stats:CreateButton({
    Name = "World 2",
    Callback = function()
-game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(4995, 14411, -119)
-wait(3)
-game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, 14405, -62)
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(5000, 99, -63)
+wait(1)
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(4999, 14426, -118)
+wait(1.5)
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(5002, 14397, -60)
+wait(1)
    end,
 })
