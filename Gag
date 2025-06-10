@@ -25,10 +25,10 @@ local Window = Euna:CreateWindow({
    }
 })
 
-local MainTab = Window:CreateTab("🏡 Home", nil) -- Title, Image
-local Auto = Window:CreateTab("🔁Auto", nil) -- Title, Image
-local Wala = Window:CreateTab("Wla", nil) -- Title, Image
-local Gapo = Window:CreateTab("gapo", nil) -- Title, Image
+local Secret = Window:CreateTab("🤫 Secret", nil) -- Title, Image
+local Shop = Window:CreateTab("🏪 Shop", nil) -- Title, Image
+local Auto = Window:CreateTab("🔁 Auto", nil) -- Title, Image
+local Misc = Window:CreateTab("⚙️ Misc", nil) -- Title, Image
 Euna:Notify({
    Title = "Executed Successfully!",
    Content = "Press X to Turn ON",
@@ -44,7 +44,7 @@ Euna:Notify({
 },
 })
 
-local Button = MainTab:CreateButton({
+local Button = Misc:CreateButton({
    Name = "InfiniteYeld",
    Callback = function()
    loadstring(game:HttpGet(('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'),true))()
@@ -95,10 +95,10 @@ local function createLabel(model)
 
     local txt = Drawing.new("Text")
     txt.Text = `{eggType} | {pet or "?"}`
-    txt.Size = 18
+    txt.Size = 28
     txt.Color = Color3.new(1, 1, 1)
     txt.Outline = true
-    txt.OutlineColor = Color3.new(0, 0, 0)
+    txt.OutlineColor = Color3.new(0, 28, 0)
     txt.Center = true
     txt.Visible = false
 
@@ -150,16 +150,14 @@ local original; original = hookfunction(getconnections(rs.GameEvents.EggReadyToH
 end))
 
 rsRun.PreRender:Connect(updateLabels)
+end))
+
+rsRun.PreRender:Connect(updateLabels)
    end,
 })
-local Button = Wala:CreateButton({
-   Name = "World 2",
+local Button = Auto:CreateButton({
+   Name = "h",
    Callback = function()
-game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(5000, 99, -63)
-wait(1)
-game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(4999, 14426, -118)
-wait(1.5)
-game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(5002, 14397, -60)
-wait(1)
+
    end,
 })
