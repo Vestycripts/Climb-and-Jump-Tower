@@ -51,8 +51,8 @@ local Button = Misc:CreateButton({
    end,
 })
 
-local Button = Secret:CreateButton({
-   Name = "Egg Check",
+local Button = Shop:CreateButton({
+   Name = "Seed Shop",
    Callback = function()
 local rs = game:GetService("ReplicatedStorage")
 local cs = game:GetService("CollectionService")
@@ -194,7 +194,7 @@ end)
 })
 
 
-local Button = Secret:CreateButton({
+local Button = MainTab:CreateButton({
    Name = "Egg Prediction",
    Callback = function()
 local rs = game:GetService("ReplicatedStorage")
