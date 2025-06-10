@@ -26,8 +26,6 @@ local Window = Euna:CreateWindow({
 })
 
 local Secret = Window:CreateTab("🤫 Secret", nil) -- Title, Image
-local Shop = Window:CreateTab("🏪 Shop", nil) -- Title, Image
-local Auto = Window:CreateTab("🔁 Auto", nil) -- Title, Image
 local Misc = Window:CreateTab("⚙️ Misc", nil) -- Title, Image
 Euna:Notify({
    Title = "Executed Successfully!",
@@ -52,7 +50,7 @@ local Button = Misc:CreateButton({
 })
 
 
-local Button = Auto:CreateButton({
+local Button = Secret:CreateButton({
    Name = "Egg Prediction",
    Callback = function()
 local rs = game:GetService("ReplicatedStorage")
