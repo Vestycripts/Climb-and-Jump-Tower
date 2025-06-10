@@ -25,8 +25,10 @@ local Window = Euna:CreateWindow({
    }
 })
 
-local Secret = Window:CreateTab("🤫 Secret", nil) -- Title, Image
+local MainTab = Window:CreateTab("🤫 Secret", nil) -- Title, Image
+local Shop = Window:CreateTab("🏪 Shop", nil) -- Title, Image
 local Misc = Window:CreateTab("⚙️ Misc", nil) -- Title, Image
+
 Euna:Notify({
    Title = "Executed Successfully!",
    Content = "Press X to Turn ON",
@@ -46,6 +48,48 @@ local Button = Misc:CreateButton({
    Name = "InfiniteYeld",
    Callback = function()
    loadstring(game:HttpGet(('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'),true))()
+   end,
+})
+
+
+local Button = Shop:CreateButton({
+   Name = "Seed Shop",
+   Callback = function()
+local onoffgui1 = false 
+onoffgui1 = true --settings value and true false 
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+local seedShopGui = playerGui:WaitForChild("Seed_Shop")
+local timerLabel = seedShopGui:WaitForChild("Frame"):WaitForChild("Frame"):WaitForChild("Timer")
+
+local displayGui = Instance.new("ScreenGui")
+displayGui.Name = "SeedTimerDisplay"
+displayGui.ResetOnSpawn = false
+displayGui.Parent = playerGui
+
+
+local textLabel = Instance.new("TextLabel")
+textLabel.Size = UDim2.new(0, 80, 0, 60)
+textLabel.Position = UDim2.new(0.5, -110, 0.1, 0)
+textLabel.BackgroundTransparency = 1
+textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+textLabel.TextScaled = true
+textLabel.Font = Enum.Font.SourceSansBold
+textLabel.Text = "Loading..."
+textLabel.Active = true
+textLabel.Draggable = true
+textLabel.Visible = onoffgui1
+textLabel.Parent = displayGui
+
+game:GetService("RunService").RenderStepped:Connect(function()
+    if onoffgui1 and timerLabel and timerLabel:IsA("TextLabel") then
+        textLabel.Visible = true
+        textLabel.Text = "" .. timerLabel.Text
+    else
+        textLabel.Visible = false
+    end
+end)
    end,
 })
 
@@ -93,10 +137,10 @@ local function createLabel(model)
 
     local txt = Drawing.new("Text")
     txt.Text = `{eggType} | {pet or "?"}`
-    txt.Size = 28
+    txt.Size = 23
     txt.Color = Color3.new(1, 1, 1)
     txt.Outline = true
-    txt.OutlineColor = Color3.new(0, 28, 0)
+    txt.OutlineColor = Color3.new(0, 0, 0)
     txt.Center = true
     txt.Visible = false
 
@@ -148,14 +192,5 @@ local original; original = hookfunction(getconnections(rs.GameEvents.EggReadyToH
 end))
 
 rsRun.PreRender:Connect(updateLabels)
-end))
-
-rsRun.PreRender:Connect(updateLabels)
-   end,
-})
-local Button = Auto:CreateButton({
-   Name = "h",
-   Callback = function()
-
    end,
 })
