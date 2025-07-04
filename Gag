@@ -47,11 +47,6 @@ Euna:Notify({
 local Button = MainTab:CreateButton({
    Name = "Mutation Esp",
    Callback = function()
--- [[
---  GAG Calculator for Grow a Garden by Havoc
---  Discord: havoc06946 - DM me for more suggestions
---]]
-
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
