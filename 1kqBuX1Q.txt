@@ -1,0 +1,78 @@
+-- LocalScript dentro de StarterGui
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local teleporting = false
+
+-- Criar ScreenGui
+local screenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+screenGui.Name = "AutoFarmGui"
+screenGui.ResetOnSpawn = false
+
+-- Criar Frame principal (GUI movível)
+local frame = Instance.new("Frame", screenGui)
+frame.Size = UDim2.new(0, 250, 0, 120)
+frame.Position = UDim2.new(0.5, -125, 0.5, -60)
+frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+frame.BorderSizePixel = 3
+frame.BorderColor3 = Color3.fromRGB(170, 0, 255) -- Roxo
+frame.Active = true
+frame.Draggable = true
+
+-- Efeito borda roxa brilhante (loop)
+task.spawn(function()
+	while true do
+		frame.BorderColor3 = Color3.fromRGB(255, 0, 255)
+		wait(0.5)
+		frame.BorderColor3 = Color3.fromRGB(170, 0, 255)
+		wait(0.5)
+	end
+end)
+
+-- Título "View Hub"
+local title = Instance.new("TextLabel", frame)
+title.Text = "View Hub"
+title.Size = UDim2.new(1, 0, 0, 30)
+title.BackgroundTransparency = 1
+title.TextColor3 = Color3.fromRGB(200, 0, 255)
+title.TextStrokeTransparency = 0
+title.Font = Enum.Font.GothamBold
+title.TextScaled = true
+
+-- Botão Auto Farm
+local button = Instance.new("TextButton", frame)
+button.Name = "AutoFarmButton"
+button.Text = "Auto Farm"
+button.Size = UDim2.new(0.8, 0, 0, 40)
+button.Position = UDim2.new(0.1, 0, 0.5, 0)
+button.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Vermelho
+button.TextColor3 = Color3.fromRGB(255, 255, 255)
+button.Font = Enum.Font.GothamBold
+button.TextScaled = true
+button.BorderSizePixel = 0
+button.AutoButtonColor = false
+
+-- Coordenadas do local
+local position = Vector3.new(-8.08323479, 64.8352585, -1636.96326)
+local orientation = Vector3.new(-0.0482568555, -0.0379763469, -0.998112738)
+
+-- Função de teleporte
+local function teleportLoop()
+	while teleporting do
+		local character = player.Character
+		if character and character:FindFirstChild("HumanoidRootPart") then
+			character:MoveTo(position)
+		end
+		wait(0.70)
+	end
+end
+
+-- Clique do botão
+button.MouseButton1Click:Connect(function()
+	teleporting = not teleporting
+	if teleporting then
+		button.BackgroundColor3 = Color3.fromRGB(0, 255, 0) -- Verde
+		task.spawn(teleportLoop)
+	else
+		button.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Vermelho
+	end
+end)
