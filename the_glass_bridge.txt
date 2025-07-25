@@ -1,6 +1,6 @@
 local player = game.Players.LocalPlayer
 local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
-gui.Name = "G2DVGlassChecker"
+gui.Name = "Euna's Glass Checker"
 gui.ResetOnSpawn = false
 
 -- Main Frame
@@ -17,7 +17,7 @@ Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 20)
 local titleBar = Instance.new("TextLabel", mainFrame)
 titleBar.Size = UDim2.new(1, 0, 0, 40)
 titleBar.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-titleBar.Text = "G2DV Glass Checker"
+titleBar.Text = "Euna's Glass Checker"
 titleBar.TextColor3 = Color3.fromRGB(200, 0, 0)
 titleBar.Font = Enum.Font.GothamBlack
 titleBar.TextSize = 22
@@ -61,7 +61,7 @@ local bubble = Instance.new("TextButton", gui)
 bubble.Size = UDim2.new(0, 50, 0, 50)
 bubble.Position = UDim2.new(0, 20, 0.5, -25)
 bubble.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-bubble.Text = "🧊"
+bubble.Text = "😶‍🌫️"
 bubble.TextColor3 = Color3.fromRGB(200, 0, 0)
 bubble.TextSize = 24
 bubble.Visible = false
