@@ -2,10 +2,10 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 local selectedTheme = "Default"
 local Window = Rayfield:CreateWindow({
-   Name = "99 Nights In The Forest - Script By Iliankytb",
+   Name = "99 Nights In The Forest - Script By Euna",
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
    LoadingTitle = "99 Nights In The Forest",
-   LoadingSubtitle = "Script By Iliankytb",
+   LoadingSubtitle = "Script By Eunaa",
    Theme = selectedTheme, -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
    DisableRayfieldPrompts = false,
