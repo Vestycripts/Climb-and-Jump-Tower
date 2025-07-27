@@ -3,9 +3,9 @@ local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/tbao1
 
 -- Main Window
 local Window = redzlib:MakeWindow({
-    Title = "Zeta Hub X 99 nights in the forest",
-    SubTitle = "by S I L E N T",
-    SaveFolder = "ZetaHubUniversal"
+    Title = "Euna X 99 nights in the forest",
+    SubTitle = "by E U N A ",
+    SaveFolder = "EunaHubUniversal"
 })
 
 Window:AddMinimizeButton({
