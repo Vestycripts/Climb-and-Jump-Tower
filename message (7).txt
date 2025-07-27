@@ -1,0 +1,472 @@
+-- Load RedzLib library
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/tbao143/Library-ui/refs/heads/main/Redzhubui"))()
+
+-- Main Window
+local Window = redzlib:MakeWindow({
+    Title = "Zeta Hub X 99 nights in the forest",
+    SubTitle = "by S I L E N T",
+    SaveFolder = "ZetaHubUniversal"
+})
+
+Window:AddMinimizeButton({
+    Button = { Image = "rbxassetid://100006760882280", BackgroundTransparency = 0 },
+    Corner = { CornerRadius = UDim.new(0, 6) },
+})
+
+-- Services
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Lighting = game:GetService("Lighting")
+local UserInputService = game:GetService("UserInputService")
+local LocalPlayer = Players.LocalPlayer
+
+local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+
+LocalPlayer.CharacterAdded:Connect(function(chr)
+    character = chr
+    humanoid = chr:WaitForChild("Humanoid")
+end)
+
+-- 📱 Discord Tab
+local TabDiscord = Window:MakeTab({
+    Title = "Discord",
+    Icon = "rbxassetid://84198990394879"
+})
+
+TabDiscord:AddSection("Discord")
+
+TabDiscord:AddDiscordInvite({
+    Name = "Info",
+    Description = "Discord link",
+    Logo = "rbxassetid://88800066762467",
+    Invite = "https://discord.gg/pzrtAEDBbt"
+})
+
+-- 🛠️ Main Tab
+local TabMain = Window:MakeTab({
+    Title = "Main",
+    Icon = "rbxassetid://106319096400681"
+})
+TabMain:AddSection("Main")
+
+-- 🔥 Teleport to bonfire at night
+local bonfirePosition = Vector3.new(0.32, 6.15, -0.22)
+local teleportEnabled = false
+local teleportConnection = nil
+
+TabMain:AddToggle({
+    Name = "Teleport to the bonfire at night",
+    Default = false,
+    Callback = function(value)
+        teleportEnabled = value
+        
+        if teleportConnection then
+            teleportConnection:Disconnect()
+            teleportConnection = nil
+        end
+        
+        if value then
+            teleportConnection = RunService.Heartbeat:Connect(function()
+                if character and character:FindFirstChild("HumanoidRootPart") then
+                    if Lighting.ClockTime >= 18 or Lighting.ClockTime <= 6 then
+                        local hrp = character.HumanoidRootPart
+                        hrp.CFrame = CFrame.new(bonfirePosition)
+                        hrp.Velocity = Vector3.new(0, 0, 0)
+                    end
+                end
+            end)
+        end
+    end
+})
+
+-- 🕴 Infinite Jump
+local infiniteJump = false
+local jumpConnection = nil
+
+TabMain:AddToggle({
+    Name = "Infinite jump",
+    Default = false,
+    Callback = function(value)
+        infiniteJump = value
+        
+        if jumpConnection then
+            jumpConnection:Disconnect()
+            jumpConnection = nil
+        end
+        
+        if value then
+            jumpConnection = UserInputService.JumpRequest:Connect(function()
+                if infiniteJump and humanoid and humanoid:GetState() ~= Enum.HumanoidStateType.Dead then
+                    humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                end
+            end)
+        end
+    end
+})
+
+-- 🏃‍♂️ Speed Control
+local speedEnabled = false
+local currentSpeed = 16
+local speedConnection = nil
+
+TabMain:AddToggle({
+    Name = "Enable Speed",
+    Default = false,
+    Callback = function(value)
+        speedEnabled = value
+        
+        if speedConnection then
+            speedConnection:Disconnect()
+            speedConnection = nil
+        end
+        
+        if value and humanoid then
+            humanoid.WalkSpeed = currentSpeed
+            speedConnection = RunService.Heartbeat:Connect(function()
+                if humanoid and speedEnabled then
+                    humanoid.WalkSpeed = currentSpeed
+                end
+            end)
+        elseif humanoid then
+            humanoid.WalkSpeed = 16 -- Default speed
+        end
+    end
+})
+
+TabMain:AddSlider({
+    Name = "Speed Value",
+    Min = 16,
+    Max = 1000,
+    Default = 16,
+    Color = Color3.fromRGB(255, 255, 255),
+    Increment = 1,
+    ValueName = "Speed",
+    Callback = function(value)
+        currentSpeed = value
+        if speedEnabled and humanoid then
+            humanoid.WalkSpeed = value
+        end
+    end
+})
+
+-- 🔫 Combat Tab
+local TabCombat = Window:MakeTab({
+    Title = "Combat",
+    Icon = "rbxassetid://7072706620" -- Sword icon
+})
+TabCombat:AddSection("Combat")
+
+-- Kill Aura
+local killAuraEnabled = false
+local killAuraRange = 50
+local killAuraConnection = nil
+
+local function isNPC(model)
+    if not model:IsA("Model") then return false end
+    if model:FindFirstChild("PlayerScripts") then return false end
+    if model == character then return false end
+    return model:FindFirstChildOfClass("Humanoid") ~= nil
+end
+
+local function killNPC(npc)
+    if not npc or not npc.Parent then return end
+    
+    local humanoid = npc:FindFirstChildOfClass("Humanoid")
+    if humanoid and humanoid.Health > 0 then
+        humanoid.Health = 0
+    end
+end
+
+TabCombat:AddToggle({
+    Name = "Kill Aura (NPCs Only)",
+    Default = false,
+    Callback = function(value)
+        killAuraEnabled = value
+        
+        if killAuraConnection then
+            killAuraConnection:Disconnect()
+            killAuraConnection = nil
+        end
+        
+        if value then
+            killAuraConnection = RunService.Heartbeat:Connect(function()
+                if not character or not character.PrimaryPart then return end
+                
+                for _, npc in ipairs(workspace:GetDescendants()) do
+                    if isNPC(npc) then
+                        local rootPart = npc:FindFirstChild("HumanoidRootPart") or npc.PrimaryPart
+                        if rootPart then
+                            local distance = (character.PrimaryPart.Position - rootPart.Position).Magnitude
+                            if distance <= killAuraRange then
+                                killNPC(npc)
+                            end
+                        end
+                    end
+                end
+            end)
+        end
+    end
+})
+
+TabCombat:AddSlider({
+    Name = "Kill Aura Range",
+    Min = 10,
+    Max = 100,
+    Default = 50,
+    Color = Color3.fromRGB(255, 0, 0),
+    Increment = 1,
+    ValueName = "Studs",
+    Callback = function(value)
+        killAuraRange = value
+    end
+})
+
+-- 📦 Bring Tab
+local TabBring = Window:MakeTab({
+    Title = "Bring",
+    Icon = "rbxassetid://44833679421829"
+})
+
+-- Fuel Items Section
+TabBring:AddSection("Fuel Items")
+
+local selectedFuelItem = "Log"
+TabBring:AddDropdown({
+    Name = "Select Fuel Item",
+    Default = "Log",
+    Options = {"Log", "Coal", "Fuel Canister"},
+    Callback = function(value)
+        selectedFuelItem = value
+    end
+})
+
+TabBring:AddButton({
+    Name = "Bring Item",
+    Callback = function()
+        local root = character and character:FindFirstChild("HumanoidRootPart")
+        if not root then return end
+        
+        local offset = 0
+        for _, item in ipairs(workspace:GetDescendants()) do
+            if item:IsA("Model") and item.Name == selectedFuelItem then
+                local part = item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart")
+                if part then
+                    item:SetPrimaryPartCFrame(root.CFrame * CFrame.new(offset, 2, 0))
+                    offset = offset + 2
+                    task.wait(0.1)
+                end
+            end
+        end
+    end
+})
+
+-- Food Items Section
+TabBring:AddSection("Food Items")
+
+local selectedFoodItem = "Morsel"
+TabBring:AddDropdown({
+    Name = "Select Food Item",
+    Default = "Morsel",
+    Options = {"Morsel", "Carrot"},
+    Callback = function(value)
+        selectedFoodItem = value
+    end
+})
+
+TabBring:AddButton({
+    Name = "Bring Item",
+    Callback = function()
+        local root = character and character:FindFirstChild("HumanoidRootPart")
+        if not root then return end
+        
+        local offset = 0
+        for _, item in ipairs(workspace:GetDescendants()) do
+            if item:IsA("Model") and item.Name == selectedFoodItem then
+                local part = item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart")
+                if part then
+                    item:SetPrimaryPartCFrame(root.CFrame * CFrame.new(offset, 2, 0))
+                    offset = offset + 2
+                    task.wait(0.1)
+                end
+            end
+        end
+    end
+})
+
+-- Regenerate Life Items Section
+TabBring:AddSection("Regenerate Life Items")
+
+local selectedHealthItem = "Bandage"
+TabBring:AddDropdown({
+    Name = "Select Health Item",
+    Default = "Bandage",
+    Options = {"Bandage", "Medkit"},
+    Callback = function(value)
+        selectedHealthItem = value
+    end
+})
+
+TabBring:AddButton({
+    Name = "Bring Item",
+    Callback = function()
+        local root = character and character:FindFirstChild("HumanoidRootPart")
+        if not root then return end
+        
+        local offset = 0
+        for _, item in ipairs(workspace:GetDescendants()) do
+            if item:IsA("Model") and item.Name == selectedHealthItem then
+                local part = item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart")
+                if part then
+                    item:SetPrimaryPartCFrame(root.CFrame * CFrame.new(offset, 2, 0))
+                    offset = offset + 2
+                    task.wait(0.1)
+                end
+            end
+        end
+    end
+})
+
+-- 🧿 ESP Tab
+local TabESP = Window:MakeTab({
+    Title = "ESP",
+    Icon = "rbxassetid://100059899467593"
+})
+TabESP:AddSection("Visuals")
+
+local espChests = {}
+local espChestEnabled = false
+local chestConnection = nil
+
+local function createESP(chest)
+    if not chest or not chest.Parent or espChests[chest] then return end
+
+    local part = chest:FindFirstChildWhichIsA("BasePart") or chest.PrimaryPart
+    if not part then return end
+
+    local hl = Instance.new("Highlight")
+    hl.Name = "ESP_Highlight"
+    hl.FillColor = Color3.fromRGB(255, 255, 0)
+    hl.OutlineColor = Color3.fromRGB(255, 255, 255)
+    hl.FillTransparency = 0.3
+    hl.OutlineTransparency = 0
+    hl.Adornee = chest
+    hl.Parent = chest
+
+    local bb = Instance.new("BillboardGui")
+    bb.Name = "ESP_Billboard"
+    bb.Adornee = part
+    bb.Size = UDim2.new(0, 100, 0, 40)
+    bb.AlwaysOnTop = true
+    bb.Parent = chest
+
+    local lbl = Instance.new("TextLabel")
+    lbl.Size = UDim2.new(1, 0, 1, 0)
+    lbl.BackgroundTransparency = 1
+    lbl.TextColor3 = Color3.fromRGB(255, 255, 0)
+    lbl.TextStrokeTransparency = 0
+    lbl.TextScaled = true
+    lbl.Font = Enum.Font.SourceSansBold
+    lbl.Text = "Item Chest"
+    lbl.Parent = bb
+
+    local prompt = chest:FindFirstChildWhichIsA("ProximityPrompt", true)
+    if prompt then
+        if not prompt.Enabled or not prompt.Visible then
+            lbl.Text = "Collected"
+            lbl.TextColor3 = Color3.fromRGB(255, 0, 0)
+        else
+            local connection
+            connection = prompt.Triggered:Connect(function()
+                lbl.Text = "Collected"
+                lbl.TextColor3 = Color3.fromRGB(255, 0, 0)
+                if connection then
+                    connection:Disconnect()
+                end
+            end)
+            
+            prompt:GetPropertyChangedSignal("Enabled"):Connect(function()
+                if not prompt.Enabled then
+                    lbl.Text = "Collected"
+                    lbl.TextColor3 = Color3.fromRGB(255, 0, 0)
+                    if connection then
+                        connection:Disconnect()
+                    end
+                end
+            end)
+        end
+    else
+        lbl.Text = "Collected"
+        lbl.TextColor3 = Color3.fromRGB(255, 0, 0)
+    end
+
+    espChests[chest] = {
+        highlight = hl,
+        billboard = bb,
+        label = lbl,
+        prompt = prompt
+    }
+end
+
+local function removeAllESPs()
+    for chest, data in pairs(espChests) do
+        if data.highlight then 
+            pcall(function() data.highlight:Destroy() end)
+        end
+        if data.billboard then 
+            pcall(function() data.billboard:Destroy() end)
+        end
+    end
+    table.clear(espChests)
+end
+
+local function updateESPs()
+    removeAllESPs()
+    if not espChestEnabled then return end
+    
+    for _, obj in ipairs(workspace:GetDescendants()) do
+        if obj:IsA("Model") and obj.Name == "Item Chest" then
+            createESP(obj)
+        end
+    end
+end
+
+TabESP:AddToggle({
+    Name = "ESP Chest",
+    Default = false,
+    Callback = function(state)
+        espChestEnabled = state
+        
+        if chestConnection then
+            chestConnection:Disconnect()
+            chestConnection = nil
+        end
+        
+        if state then
+            updateESPs()
+            chestConnection = workspace.DescendantAdded:Connect(function(obj)
+                if obj:IsA("Model") and obj.Name == "Item Chest" then
+                    task.wait(0.5)
+                    createESP(obj)
+                end
+            end)
+        else
+            removeAllESPs()
+        end
+    end
+})
+
+-- Cleanup on script termination
+game:GetService("Players").PlayerRemoving:Connect(function(player)
+    if player == LocalPlayer then
+        if teleportConnection then teleportConnection:Disconnect() end
+        if jumpConnection then jumpConnection:Disconnect() end
+        if chestConnection then chestConnection:Disconnect() end
+        if speedConnection then speedConnection:Disconnect() end
+        if killAuraConnection then killAuraConnection:Disconnect() end
+        removeAllESPs()
+        if humanoid then
+            humanoid.WalkSpeed = 16
+        end
+    end
+end)
