@@ -1,17 +1,9 @@
 -- hello :D
 
 local ProximityPromptService = game:GetService("ProximityPromptService")
-
 local instantInteractEnabled = true
-
-
-
 ProximityPromptService.PromptButtonHoldBegan:Connect(function(prompt, player)
-
     if instantInteractEnabled then
-
         fireproximityprompt(prompt)
-
-
 wait()
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-456, 1212, 4346)
