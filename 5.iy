@@ -1,0 +1,91 @@
+local plr = Players.LocalPlayer
+
+local isAvatarOriginal = true
+
+local originalDesc
+local currentDesc
+
+local lastUser
+local addedCon
+
+local function setAvatar(char)	
+	local hum = char and char:WaitForChild("Humanoid", 3)
+	char:WaitForChild("HumanoidRootPart", 3)
+	
+	if not originalDesc then
+		originalDesc = hum:GetAppliedDescription()
+	end
+
+	if hum and currentDesc then
+		if plr.CanLoadCharacterAppearance and not plr:HasAppearanceLoaded() then plr.CharacterAppearanceLoaded:Wait() end
+		plr:ClearCharacterAppearance()
+		hum:ApplyDescriptionClientServer(currentDesc)
+		isAvatarOriginal = false
+	end
+end
+
+local Plugin = {
+    ["PluginName"] = "Copy Avatar",
+    ["PluginDescription"] = "Copies someone's avatar clientsided",
+    ["Commands"] = {
+        ["char"] = {
+            ["ListName"] = "char [plr]",
+            ["Description"] = "Copies the specified user's avatar (ONLY VISIBLE TO YOU)",
+            ["Aliases"] = {"copyavatar"},
+            ["Function"] = function(args, speaker)
+				if not args[1] then return notify('Player Required', 'A Player is Required') end
+				
+				local userId = args[1]	
+				local gPlayer = getPlayer(args[1], speaker)
+				if #gPlayer > 0 then
+					userId = Players[gPlayer[1]].UserId
+				else
+					if not tonumber(userId) then
+						local success, id = pcall(Players.GetUserIdFromNameAsync, Players, userId)
+
+						if success and id then userId = id end
+					end
+				end
+
+				if lastUser and lastUser == userId then
+					return
+				end
+				lastUser = userId
+
+				local success, desc = pcall(Players.GetHumanoidDescriptionFromUserId, Players, userId)
+				if success and desc then
+					currentDesc = desc
+				else
+					return notify('Error Occurred', 'An error occurred, does the user exist?')
+				end
+				
+				setAvatar(speaker.Character)
+				if addedCon then addedCon:Disconnect() end
+				addedCon = speaker.CharacterAdded:Connect(setAvatar)
+			end
+        },
+
+		["unchar"] = {
+			["ListName"] = "unchar", 
+			["Description"] = "Resets your avatar to your own", 
+			["Aliases"] = {"resetavatar"},
+			["Function"] = function(args, speaker)
+				if addedCon then
+					addedCon:Disconnect()
+					addedCon = nil
+					currentDesc = nil
+					lastUser = nil
+				end
+
+				local hum = speaker.Character and speaker.Character:FindFirstChildOfClass("Humanoid")
+				if hum and originalDesc and not isAvatarOriginal then
+					speaker:ClearCharacterAppearance()
+					hum:ApplyDescriptionClientServer(originalDesc)
+					isAvatarOriginal = true
+				end
+			end
+		}
+	}
+}
+
+return Plugin
